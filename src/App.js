@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Direction from './Component/Direction';
 
-
-
 import { 
   Map, 
   GoogleApiWrapper, 
@@ -14,7 +12,6 @@ const style = {
   height: '100%'
 };
 
-
 export class MapContainer extends Component {
 
     render() {
@@ -24,9 +21,18 @@ export class MapContainer extends Component {
             url: "car3.png", // url
             scaledSize: new google.maps.Size(30, 50)
         };
-      
-        
 
+        const symbol = {
+          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+
+        }
+
+        const symbolPath = [
+          {lat: 21.028384,lng:  105.843349},
+          {lat: 21.029852, lng:  105.841929},
+
+        ]
+      
         return (
             <Map 
                 google={this.props.google}
@@ -50,18 +56,8 @@ export class MapContainer extends Component {
                     name = {'Your position'}
                     position = {{lat: 21.0481377,lng: 105.8379459}}
                   />
-                <Marker
-                    name = {'Your position'}
-                    position = {{lat: 21.033662,lng:  105.836638}}
-                  />
-                <Marker
-                    name = {'Your position'}
-                    position = {{lat:21.030366,lng: 105.836084}}
-                  />
-                <Marker
-                    name = {'Your position'}
-                    position = {{lat:21.023708,lng: 105.849166}}
-                  />
+
+
 
                 <Polyline
                  
@@ -79,7 +75,29 @@ export class MapContainer extends Component {
                         ]
                     }}
                   />
+
+                <Polyline
+                 
+                    path={symbolPath}
+                    
+                    options={{
+                        strokeColor: "#ff227",
+                        strokeOpacity: 0.95,
+                        strokeWeight: 4.5,
+                        icons: [
+                            {       
+                                icon: symbol,            
+                                offset: "5.5",
+
+                            }
+                        ]
+                    }}
+                  />
+
+
             </Map>
+
+
         );
       }
 
