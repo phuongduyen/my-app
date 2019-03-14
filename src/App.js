@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import Direction from './Component/Direction';
+import SymbolPaths from './Component/SymbolPaths';
+import SymbolPath from './Component/SymbolPath';
+
 
 import { 
   Map, 
   GoogleApiWrapper, 
-  Polyline, 
+  Polyline,
+  MarkerWithLabel, 
   Marker } from 'google-maps-react';
 
 const style = {
@@ -12,27 +16,45 @@ const style = {
   height: '100%'
 };
 
+const stopBus = [
+        ['1', 21.026463, 105.855659],
+        ['2', 21.032294, 105.839528],
+        ['3', 21.0335833, 105.8390984],
+        ['4', 21.0430283, 105.835951],
+        ['5', 21.0481377, 105.8379459],
+        ['6', 21.033662, 105.836638],
+        ['7', 21.030366, 105.836084],
+        ['8', 21.024697, 105.845832],
+        ['9', 21.028894, 105.849503],
+        ['10', 21.023120, 105.851203],
+        ['11', 21.024153, 105.857194]
+      ];
+
+
 export class MapContainer extends Component {
+
+  constructor(props) {
+    super(props);
+   
+  }
 
     render() {
         const google=window.google;
 
         const icon = {
-            url: "car3.png", // url
+            url: "car3.png",
             scaledSize: new google.maps.Size(30, 50)
         };
+        const busStop={
+          url:"bb1.png",
+          scaledSize: new google.maps.Size(30, 30)
+        }
 
         const symbol = {
-          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+          path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
 
         }
 
-        const symbolPath = [
-          {lat: 21.028384,lng:  105.843349},
-          {lat: 21.029852, lng:  105.841929},
-
-        ]
-      
         return (
             <Map 
                 google={this.props.google}
@@ -45,22 +67,24 @@ export class MapContainer extends Component {
               >
                 <Marker
                     name = {'Your position'}
-                    position = {{lat: 21.0335833,lng: 105.8390984}}
+                    position = {{lat: 21.0384339,lng: 105.8397971}}
                     icon = {icon} 
                   />
-                <Marker
+
+                {stopBus.map(stop=>(   
+                                 
+                  <Marker
                     name = {'Your position'}
-                    position = {{lat: 21.0430283,lng: 105.835951}}
-                  />
-                <Marker
-                    name = {'Your position'}
-                    position = {{lat: 21.0481377,lng: 105.8379459}}
+                    position = {{lat: stop[1],lng: stop[2]}}
+                    label= {stop[0]}
+                    icon = {busStop} 
                   />
 
+                  
+                ))}
 
-
-                <Polyline
-                 
+                
+                <Polyline               
                     path={Direction}
                     geodesic={true}
                     options={{
@@ -76,24 +100,22 @@ export class MapContainer extends Component {
                     }}
                   />
 
-                <Polyline
-                 
-                    path={symbolPath}
-                    
+                {SymbolPath.map(paths=>(                  
+                  <Polyline
+                    path={paths}
                     options={{
                         strokeColor: "#ff227",
                         strokeOpacity: 0.95,
-                        strokeWeight: 4.5,
+                        strokeWeight: 3,
                         icons: [
                             {       
                                 icon: symbol,            
                                 offset: "5.5",
-
                             }
                         ]
                     }}
-                  />
-
+                  />                  
+                ))}
 
             </Map>
 
