@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Direction from './Component/Direction';
-import SymbolPaths from './Component/SymbolPaths';
 import SymbolPath from './Component/SymbolPath';
 
 
@@ -31,17 +30,58 @@ const stopBus = [
       ];
 
 
+
 export class MapContainer extends Component {
 
-  constructor(props) {
-    super(props);
-   
-  }
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        error: null,
+        isLoaded: false,
+        items: []
+      };
+
+      this.boundsMarker = this.boundsMarker.bind(this);
+     
+    }
+
+    componentDidMount() {
+      fetch("http://192.168.100.33:8080/coordinates")
+        .then(res => res.json())
+        .then(
+          (result) => {
+            this.setState({
+              isLoaded: true,
+              items: result
+            });
+          },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          (error) => {
+            this.setState({
+              isLoaded: true,
+              error
+            });
+          }
+        )
+    }
+    
+
+
+    boundsMarker(stopBus, bounds) {
+      const google=window.google;
+        {stopBus.map(stop=>(                  
+            bounds.extend(new google.maps.LatLng(stop[1], stop[2]))
+          ))
+        }
+    };
 
     render() {
         const google=window.google;
 
-        const icon = {
+        const iconCar = {
             url: "car3.png",
             scaledSize: new google.maps.Size(30, 50)
         };
@@ -55,6 +95,13 @@ export class MapContainer extends Component {
 
         }
 
+        const { error, isLoaded, items } = this.state;
+
+        const bounds  = new google.maps.LatLngBounds();
+
+
+
+
         return (
             <Map 
                 google={this.props.google}
@@ -62,26 +109,30 @@ export class MapContainer extends Component {
                 initialCenter={{
                   lat: 21.0317529,lng: 105.8400363
                 }}
-                zoom={15}
+                zoom={16}
                 onClick = {this.onMapClicked}
               >
-                <Marker
-                    name = {'Your position'}
-                    position = {{lat: 21.0384339,lng: 105.8397971}}
-                    icon = {icon} 
-                  />
+                
 
-                {stopBus.map(stop=>(   
-                                 
+                {items.map(item => (
+                  <Marker
+                    key={item.id_driver}
+                    name = {'Your position'}
+                    position = {{lat: item.latitude,lng: item.longitude}}
+                    icon = {iconCar} 
+                  />
+              
+                  ))}
+
+                {stopBus.map(stop=>(                  
                   <Marker
                     name = {'Your position'}
                     position = {{lat: stop[1],lng: stop[2]}}
                     label= {stop[0]}
                     icon = {busStop} 
                   />
-
-                  
                 ))}
+              
 
                 
                 <Polyline               
