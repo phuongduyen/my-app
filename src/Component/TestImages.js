@@ -20,7 +20,6 @@ export class TestImages extends Component {
 	  this.setState({
 	    rotation: newRotation
 	  });
-
 	}
 
 	updatee(){
@@ -31,7 +30,7 @@ export class TestImages extends Component {
 			};
 
 	      
-		    });
+		});
 
 
 	}

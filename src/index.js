@@ -2,6 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import Local from './Local';
+import MapComponent from './MapComponent';
+
+
 import TestImages from './Component/TestImages';
 
 import * as serviceWorker from './serviceWorker';
